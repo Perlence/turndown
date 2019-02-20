@@ -241,6 +241,7 @@ console.log(
     var turndownService = new window.TurndownService(options())
 
     input.addEventListener('input', update)
+    input.addEventListener('paste', handlePaste)
 
     optionsForm.addEventListener('change', function () {
       turndownService = new window.TurndownService(options())
@@ -251,6 +252,14 @@ console.log(
 
     function update () {
       output.value = turndownService.turndown(input.value)
+    }
+
+    function handlePaste (e) {
+      e.stopPropagation()
+      e.preventDefault()
+      var pasted = e.clipboardData.getData('text/html') || e.clipboardData.getData('text')
+      input.value = input.value.slice(0, this.selectionStart) + pasted + input.value.slice(this.selectionEnd)
+      update()
     }
 
     function options () {
